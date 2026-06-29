@@ -33,5 +33,29 @@ bowtie2 -p 8 -q --local -x "$REFERENCE_GENOME" -1 "$R1" -2 "$R2" -S "$OUTPUT_PRE
 ```
 followed by sorting and indexing using samtools/1.6
 
+```
 samtools view -bS "$FILE" | samtools sort -o "$OUTPUT_DIR/${SAMPLE_NAME}_sorted.bam" -
 samtools index -@ 8 "$OUTPUT_DIR/${SAMPLE_NAME}_sorted.bam"
+```
+
+## Deduplicate Reads
+We used UMI-tools to deduplicate samples after alignment. UMI-tools does this by removing reads aligned to the same genomic position with the same UMI in the read name.
+```
+umi_tools dedup -I "$BAM" --output-stats="$STATS_OUTPUT" --paired -S "$OUTPUT"
+```
+## Extract R1
+Extracted R1 to map the true 5'end using samtools/1.6
+
+```
+samtools view -hb -f 66 "$FILE" -o "$OUTPUT_DIR/${SAMPLE_NAME}_R1.bam"
+samtools index "$OUTPUT_DIR/${SAMPLE_NAME}_R1.bam"
+```
+
+## Convert to bigwig using deeptools/3.5.1
+
+```
+bamCoverage -b "$FILE" -o "$OUTPUT_DIR/${SAMPLE_NAME}.bw" --outFileFormat bigwig --normalizeUsing RPKM --binSize 1
+```
+
+## Extract RPKM values and plot
+The final analysis was performed using a custom R script. See the file bigwig_analysis.Rmd for an example

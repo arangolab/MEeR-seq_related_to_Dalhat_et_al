@@ -59,3 +59,5 @@ bamCoverage -b "$FILE" -o "$OUTPUT_DIR/${SAMPLE_NAME}.bw" --outFileFormat bigwig
 
 ## Extract RPKM values and plot
 The final analysis was performed using a custom R script. See the file bigwig_analysis.Rmd for an example
+
+Sample labeling: P_5_1: NAT10WT_replicate1_5'end, P_5_1: NAT10WT_replicate2_5'end, H_5_1: E389L_replicate1_5'end, H_5_2: E389L_replicate2_5'end
